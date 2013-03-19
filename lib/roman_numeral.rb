@@ -1,18 +1,30 @@
 class RomanNumeral
 
-  attr_accessor :numeral
+  DIGITS = { 'I' => 1, 'V' => 5, 'X' => 10 }
 
-  def to_i
+  def to_i(numeral)
     value = 0
-    numeral.chars do |char|
-      # puts "Starting looking at char [#{char}], current value is #{value}"
+    chars = numeral.split('')
+    chars.each_with_index do |char, index|
+      next_char = chars[index+1]
+      # puts "Starting looking at char [#{char}], current value is #{value}, next item is #{next_char}"
+      
       case char
       when 'I'
-        value += 1
+        if next_char == 'V'
+          value = value + DIGITS['V']
+          value = value - DIGITS['I']
+          break
+        elsif next_char == 'X'
+          value = value + DIGITS['X']
+          value = value - DIGITS['I']
+          break
+        end
+        value += DIGITS['I']
       when 'V'
-        value += 5
+        value += DIGITS['V']
       when 'X'
-        value += 10
+        value += DIGITS['X']
       end
       # puts "Ending looking at char [#{char}], current value is #{value}"
     end

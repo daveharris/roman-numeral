@@ -1,40 +1,20 @@
-require_relative '../../lib/roman_numeral.rb'
+require 'rspec-given'
+
+require 'roman_numeral'
 
 describe RomanNumeral do
 
   describe "#to_i" do
-    let(:roman_numeral) { RomanNumeral.new }
-    
-    it "returns 1 for I" do
-      roman_numeral.numeral = 'I'
-      roman_numeral.to_i.should eq 1
-    end
+    Given(:converter) { RomanNumeral.new }
 
-    it "returns 2 for II" do
-      roman_numeral.numeral = 'II'
-      roman_numeral.to_i.should eq 2
-    end
+    Then { converter.to_i('I').should eq 1 }
+    Then { converter.to_i('II').should eq 2 }
 
-    it "returns 4 for IV" do
-      roman_numeral.numeral = 'IV'
-      roman_numeral.to_i.should eq 4
-    end
+    Then { converter.to_i('IV').should eq 4 }
+    Then { converter.to_i('IX').should eq 9 }
 
-    it "returns 5 for V" do
-      roman_numeral.numeral = 'V'
-      roman_numeral.to_i.should eq 5
-    end
-
-    it "returns 6 for VI" do
-      roman_numeral.numeral = 'VI'
-      roman_numeral.to_i.should eq 6
-    end
-
-    it "returns 10 for X" do
-      roman_numeral.numeral = 'X'
-      roman_numeral.to_i.should eq 10
-    end
-
-
+    Then { converter.to_i('V').should eq 5 }
+    Then { converter.to_i('VI').should eq 6 }
+    Then { converter.to_i('X').should eq 10 }
   end
 end
