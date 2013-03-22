@@ -1,33 +1,70 @@
 class RomanNumeral
 
-  DIGITS = { 'I' => 1, 'V' => 5, 'X' => 10 }
+  TO_R_CONVERSIONS = {
+      10 => 'X',
+      9 => 'IX',
+      5 => 'V',
+      4 => 'IV',
+      1 => 'I'
+    }
 
+  TO_I_CONVERSIONS = { 
+    I:  1,
+    V:  5,
+    X:  10
+  }
+
+  # Stolen from https://github.com/jamesshipton/roman-numeral
   def to_i(numeral)
-    value = 0
-    chars = numeral.split('')
-    chars.each_with_index do |char, index|
-      next_char = chars[index+1]
-      # puts "Starting looking at char [#{char}], current value is #{value}, next item is #{next_char}"
-      
-      case char
-      when 'I'
-        if next_char == 'V'
-          value = value + DIGITS['V']
-          value = value - DIGITS['I']
-          break
-        elsif next_char == 'X'
-          value = value + DIGITS['X']
-          value = value - DIGITS['I']
-          break
-        end
-        value += DIGITS['I']
-      when 'V'
-        value += DIGITS['V']
-      when 'X'
-        value += DIGITS['X']
+    @roman_numeral = numeral
+    
+    numerals.inject(0) do |total, numeral|
+      @current_numeral = numeral
+
+      if subtract_numeral_from_total?
+        total - numeral_to_integer
+      else
+        total + numeral_to_integer
       end
-      # puts "Ending looking at char [#{char}], current value is #{value}"
     end
-    value
+  end
+
+  def numerals
+    @numerals ||= @roman_numeral.split('')
+  end
+
+  def subtract_numeral_from_total?
+    has_next_numeral? &&
+    next_numeral_is_greater?
+  end
+
+  def has_next_numeral?
+    !@current_numeral.equal?(numerals.last)
+  end
+
+  def next_numeral_is_greater?
+    numeral_to_integer < numeral_to_integer(next_numeral)
+  end
+
+  def next_numeral
+    numerals[(numerals.index { |n| n.equal? @current_numeral } + 1)]
+  end
+
+  def numeral_to_integer(numeral = @current_numeral)
+    TO_I_CONVERSIONS[numeral.to_sym]
+  end
+
+  # Stolen from http://youtu.be/983zk0eqYLY
+  def to_r(int)
+    result = ""
+    
+    TO_R_CONVERSIONS.each do |limit, glyph|
+      while int >= limit
+        result << glyph
+        int -= limit
+      end
+    end
+
+    result
   end
 end
